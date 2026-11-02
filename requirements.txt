@@ -1,0 +1,9 @@
+pymupdf>=1.24
+pillow>=10.0
+numpy>=1.24
+requests>=2.31
+pytesseract>=0.3.10
+# Cần cài thêm Tesseract OCR + gói ngôn ngữ tiếng Việt (vie) cho PDF scan:
+#   Ubuntu:  sudo apt install tesseract-ocr tesseract-ocr-vie
+#   macOS:   brew install tesseract tesseract-lang
+#   Windows: https://github.com/UB-Mannheim/tesseract/wiki (chọn Vietnamese khi cài)

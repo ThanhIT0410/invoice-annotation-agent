@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m pipeline.agent:*)",
+      "Bash(python3 -m pipeline.agent:*)",
+      "Bash(py -m pipeline.agent:*)",
+      "Bash(.venv/bin/python -m pipeline.agent:*)",
+      "Bash(.venv/Scripts/python.exe -m pipeline.agent:*)",
+      "Bash(.venv/Scripts/python -m pipeline.agent:*)",
+      "Read(./work/**)",
+      "Read(./pipeline/**)",
+      "Read(./SOP_pipeline_claude_bbox.md)",
+      "Edit(./work/**)",
+      "Write(./work/**)",
+      "Grep",
+      "Glob"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Bash(cat .env*)",
+      "Bash(type .env*)",
+      "Edit(./pipeline/**)",
+      "Edit(./logs.txt)",
+      "Write(./logs.txt)"
+    ]
+  }
+}
