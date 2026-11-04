@@ -112,7 +112,11 @@ Write `work/ID/audit.json`:
 ```
 `box_reviews` phải có MỌI box có bbox (không cần cho trường `no_box`). `verdict`: `ok` | `issue`. Tiếng Việt ngắn gọn.
 
-## Bước 7–9 — Quy đổi, gửi, báo cáo (một lệnh)
-1. `python -m pipeline.agent finish ID` = convert → upload → report. Lệnh chặn nếu thiếu `audit.json` hoặc còn box
+## Bước 7–10 — Quy đổi, gửi, báo cáo, đánh dấu AI (một lệnh)
+1. `python -m pipeline.agent finish ID` = convert → upload → report → tag. Lệnh chặn nếu thiếu `audit.json` hoặc còn box
    `verified` chưa được xem crop sau lần sửa cuối; dừng ở bước nào lỗi thì báo lỗi bước đó.
-2. Trả lời người dùng 2–4 dòng: số `box` / `no_box` đã gửi trên tổng target, sai lệch (nếu có), trường còn `needs_review`.
+2. Bước tag tự đánh dấu `bbox_source=ai` trên backend, cả khi hóa đơn CHƯA HOÀN THÀNH (hóa đơn abort không qua `finish`
+   nên không bị đánh dấu). Không có quyết định nào của bạn ở bước này. Nếu in `LỖI tag: ...`: chỉ nêu trong câu trả lời;
+   KHÔNG chạy lại `finish` (sẽ gửi lại toàn bộ bbox), KHÔNG tự gọi API, KHÔNG `abort` — hóa đơn sẽ được tag bù bằng `tag_batch.py`.
+3. Trả lời người dùng 2–4 dòng: số `box` / `no_box` đã gửi trên tổng target, sai lệch (nếu có), trường còn `needs_review`,
+   và kết quả tag nếu lỗi.

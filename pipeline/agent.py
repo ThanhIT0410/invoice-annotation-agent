@@ -660,6 +660,24 @@ def upload(doc_id: str) -> None:
         print(f"  Không đọc lại được trạng thái backend: {e}")
 
 
+def tag(doc_id: str) -> bool:
+    """Đánh dấu bbox_source=ai; lưu phản hồi vào ai_tag.json, tạo marker AI_TAGGED nếu thành công."""
+    d = config.doc_dir(doc_id)
+    d.mkdir(parents=True, exist_ok=True)
+    try:
+        code, body = api.tag_ai_source(doc_id)
+        res = {"at": _now(), "ok": 200 <= code < 300, "status_code": code, "body": body}
+    except api.ApiError as e:
+        res = {"at": _now(), "ok": False, "error": str(e)}
+    _save(d / "ai_tag.json", res)
+    if res["ok"]:
+        (d / "AI_TAGGED").write_text(res["at"], encoding="utf-8")
+    status = "OK" if res["ok"] else f"LỖI {res.get('error') or res.get('status_code')}"
+    report.append_log([f"[{doc_id}] bbox_source=ai: {status}"])
+    print(f"{'OK' if res['ok'] else 'LỖI'} tag: {status}")
+    return res["ok"]
+
+
 # ============================================================ lệnh
 def cmd_start(a) -> None:
     fetch(a.doc_id)
@@ -682,6 +700,7 @@ def cmd_finish(a) -> None:
     upload(a.doc_id)
     complete = report.write_report(a.doc_id)
     print(f"OK report: {'HOÀN THÀNH' if complete else 'CHƯA HOÀN THÀNH'}")
+    tag(a.doc_id)
 
 
 def cmd_abort(a) -> None:

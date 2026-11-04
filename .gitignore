@@ -5,3 +5,4 @@ __pycache__/
 work/
 logs.txt
 ids.txt
+ids_for_tag.txt

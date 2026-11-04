@@ -112,13 +112,23 @@ Mỗi hóa đơn chạy trong một phiên Claude riêng. Hóa đơn đã hoàn 
 | `ABORTED` | Agent dừng và đã ghi lý do |
 | `NO_REPORT` | Phiên kết thúc mà không có báo cáo, ví dụ quá thời gian. `run_batch.py` tự ghi lại lỗi |
 
+### Đánh dấu hóa đơn xử lý bằng AI
+
+Sau khi gửi bbox và ghi báo cáo, `finish` tự gọi `PATCH /api/admin/documents/<id>` với body `{"bbox_source": "ai"}` (kết quả lưu ở `work/<id>/ai_tag.json`). Hóa đơn hoàn thành hay chưa hoàn thành đều được đánh dấu; hóa đơn bị abort thì không. Với các hóa đơn đã làm trước đó, ghi id vào `ids_for_tag.txt` (cùng định dạng với `ids.txt`) rồi chạy:
+
+```powershell
+python tag_batch.py
+```
+
+Hóa đơn đã đánh dấu thành công sẽ có marker `work/<id>/AI_TAGGED` và được bỏ qua ở lần chạy sau. `tag_batch.py` cũng bỏ qua id có lần xử lý gần nhất bị abort (theo marker trong `work/<id>/`); id làm trên máy khác không có marker nên đừng đưa id đã abort vào danh sách.
+
 ## Kết quả
 
 - **`logs.txt`:** báo cáo của mọi hóa đơn, chỉ ghi nối thêm và không nên xóa.
 - **`work/<id>/`:** dữ liệu làm việc của từng hóa đơn, gồm ảnh trang, `audit.json` và các file trạng thái `DONE` hoặc `ABORTED`.
 - **`work/<id>/claude_session.json`:** số lượt, thời gian và chi phí của phiên khi chạy hàng loạt.
 
-`work/`, `logs.txt` và `ids.txt` nằm trong `.gitignore` nên không được đưa lên repo.
+`work/`, `logs.txt`, `ids.txt` và `ids_for_tag.txt` nằm trong `.gitignore` nên không được đưa lên repo.
 
 ## Cấu trúc thư mục
 

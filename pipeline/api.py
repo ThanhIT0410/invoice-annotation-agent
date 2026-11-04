@@ -66,3 +66,14 @@ def put_box(doc_id: str, payload: dict) -> tuple[int, str]:
     """PUT /api/bbox/documents/{doc_id} cho MỘT bbox. Trả (status_code, body rút gọn)."""
     r = _request("PUT", f"/api/bbox/documents/{doc_id}", headers=_headers(True), json=payload)
     return r.status_code, r.text[:500]
+
+
+ADMIN_BEARER = "123"
+
+
+def tag_ai_source(doc_id: str) -> tuple[int, str]:
+    """PATCH /api/admin/documents/{doc_id} body {"bbox_source": "ai"}. Trả (status_code, body rút gọn)."""
+    headers = {**_headers(True), "Authorization": f"Bearer {ADMIN_BEARER}"}
+    r = _request("PATCH", f"/api/admin/documents/{doc_id}", headers=headers, json={"bbox_source": "ai"})
+    return r.status_code, r.text[:500]
+
